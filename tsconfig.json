@@ -1,14 +1,11 @@
 {
     "compilerOptions": {
-        "strict": true,
-        "target": "es6",
+        "sourceMap":  true,
         "removeComments": true,
-        "strictPropertyInitialization": false,
-        "noImplicitAny": true,
-        "sourceMap": true,
+        "target":"es6",
         "outFile": "docs/js/main.js"
     },
-    "include": [
-        "dev/**/*"
+    "exclude": [
+        "docs"
     ]
 }

@@ -1,84 +1,75 @@
 class Game {
 
-    private static instance: Game
+    // Fields
+    private cars    : Car[]     = []
+    private rocks   : Rock[]    = []
+    private score   : number    = 0
+    private request : number    = 0
+    private gameover: boolean   = false
 
-    private score: number = 0
-    private destroyed: number = 0
-    private textfield: HTMLElement
-    private statusbar: HTMLElement
-    private car: Car
-    private bombs: Array<Bomb> = [];
 
-    private gameLoopId: number
+    constructor() {
+        for(let i = 0 ; i < 6 ; i++) {
+            this.addCarWithRock(i)
+        }
 
-    private constructor() {
-        this.textfield = document.getElementsByTagName("textfield")[0] as HTMLElement
-        this.statusbar = document.getElementsByTagName("bar")[0] as HTMLElement
-
-        this.car = new Car(100, 350);
-
-        this.generateBombs();
-
-        // call method gameLoop
-        this.gameLoop();
+        this.gameLoop()
     }
 
-    private gameLoop(): void {
+    private addCarWithRock(index : number) {
+        this.cars.push(new Car(index, this))
+        this.rocks.push(new Rock(index))
+    }
 
-        if (this.destroyed < 8) {
-            console.log("updating the game")
+    private gameLoop(){
+        for(let car of this.cars){
+            car.move()
+        }
+        for(let rock of this.rocks) {
+            rock.move()
+        }
 
-            this.car.update();
-            for (let bomb of this.bombs) {
-                bomb.update()
+        this.checkCollision()
+        
+        this.request = requestAnimationFrame(() => this.gameLoop())
+    }
+
+    private checkCollision() {
+        for(let car of this.cars) {
+            for(let rock of this.rocks) {
+                if(this.hasCollision(car, rock)) {
+                    rock.crashed(car.Speed)
+                    car.crash()
+                    this.gameOver()
+                }
             }
-
-            // add request animation frame
-            requestAnimationFrame(() => this.gameLoop())
-        }
-
-    }
-
-    private generateBombs() {
-        for (let i = 0; i < this.random(4, 20); i++) {
-            let bomb: Bomb = new Bomb(this.random(0, window.innerWidth), 220, this.random(1, 3));
-            this.bombs.push(bomb);
         }
     }
 
-    private random(min: number, max: number) {
-
-        return Math.floor(Math.random() * (max - min)) + min;
+    private gameOver() : void{
+        this.gameover = true
+        document.getElementById("score").innerHTML = "Game Over"
+        cancelAnimationFrame(this.request)
     }
 
-    public destroyBuilding() {
-        this.destroyed++
-        this.statusbar.style.width = this.statusbar.offsetWidth + 72 + 'px';
-        console.log("buildings destroyed " + this.destroyed)
-    }
-
-    public rebuildBuildings() {
-        this.destroyed = 0
-        this.statusbar.style.width = "0px";
-        console.log("buildings destroyed " + this.destroyed)
-    }
-
-    public scorePoint() {
-        this.score++
-        this.textfield.innerHTML = "Score: " + this.score
-    }
-
-    // Singleton Pattern
-    public static getInstance(): Game {
-        if (!Game.instance) {
-            Game.instance = new Game();
+    public addScore(x : number){
+        if(!this.gameover) {
+            this.score += Math.floor(x)
+            this.draw()
         }
-
-        return Game.instance;
     }
 
-}
+    private draw() {
+        document.getElementById("score").innerHTML = "Score : "+this.score
+    }
 
-window.addEventListener("load", () => {
-    Game.getInstance()
-})
+    private hasCollision(rect1 : Car, rect2 : Rock) : boolean {
+        return (rect1.X < rect2.X + rect2.width &&
+                rect1.X + rect1.width > rect2.X &&
+                rect1.Y < rect2.Y + rect2.height &&
+                rect1.Y + rect1.height > rect2.Y)
+    }
+} 
+
+// load
+window.addEventListener("load", () => new Game() )
