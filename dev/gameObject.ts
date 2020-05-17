@@ -26,7 +26,5 @@ abstract class GameObject extends HTMLElement {
         this.style.transform = `translate(${this.x}px,${this.y}px)`
     }
 
-    public onCollision(): void {
-
-    }
+    public abstract onCollision(): void
 }

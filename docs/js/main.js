@@ -10,14 +10,16 @@ class GameObject extends HTMLElement {
     draw() {
         this.style.transform = `translate(${this.x}px,${this.y}px)`;
     }
-    onCollision() {
-    }
 }
 class Wheel extends GameObject {
     constructor(car, offsetCarX) {
         super();
         this.style.transform = `translate(${offsetCarX}px, 30px)`;
         car.appendChild(this);
+    }
+    move() {
+    }
+    onCollision() {
     }
 }
 window.customElements.define("wheel-component", Wheel);
@@ -28,6 +30,7 @@ class Car extends GameObject {
         this.braking = false;
         this.stopped = false;
         this.game = game;
+        console.log(this.game);
         this.X = 0;
         this.Y = (70 * yIndex) + 80;
         new Wheel(this, 105);
@@ -37,13 +40,27 @@ class Car extends GameObject {
         let parent = document.getElementById("container");
         parent.appendChild(this);
     }
-    get Speed() { return this.speed; }
-    get X() { return this.x; }
-    set X(value) { this.x = value; }
-    get Y() { return this.y; }
-    set Y(value) { this.y = value; }
-    get width() { return this.clientWidth; }
-    get height() { return this.clientHeight; }
+    get Speed() {
+        return this.speed;
+    }
+    get X() {
+        return this.x;
+    }
+    set X(value) {
+        this.x = value;
+    }
+    get Y() {
+        return this.y;
+    }
+    set Y(value) {
+        this.y = value;
+    }
+    get width() {
+        return this.clientWidth;
+    }
+    get height() {
+        return this.clientHeight;
+    }
     handleMouseClick(e) {
         this.braking = true;
         this.changeColor(80);
@@ -74,6 +91,8 @@ class Car extends GameObject {
     }
     changeColor(deg) {
         this.style.filter = `hue-rotate(${deg}deg)`;
+    }
+    onCollision() {
     }
 }
 window.customElements.define("car-component", Car);
@@ -135,8 +154,16 @@ class Game {
             rect1.Y < rect2.Y + rect2.height &&
             rect1.Y + rect1.height > rect2.Y);
     }
+    static getInstance() {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
+    }
 }
-window.addEventListener("load", () => new Game());
+window.addEventListener("load", () => {
+    Game.getInstance();
+});
 class Rock extends GameObject {
     constructor(index) {
         super();
@@ -186,6 +213,8 @@ class Rock extends GameObject {
         this.g = 9.81;
         this.speed = carSpeed;
         this.rotationSpeed = 5;
+    }
+    onCollision() {
     }
 }
 window.customElements.define("rock-component", Rock);

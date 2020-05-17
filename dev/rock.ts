@@ -70,6 +70,9 @@ class Rock extends GameObject {
         this.speed = carSpeed
         this.rotationSpeed = 5
     }
+
+    public onCollision(this): void {
+    }
 }
 
 window.customElements.define("rock-component", Rock as any)
