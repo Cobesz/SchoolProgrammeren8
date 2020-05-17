@@ -1,25 +1,42 @@
-class Rock extends HTMLElement{
-    // Fields 
-    private x : number = 0
-    private y : number = 0
+///<reference path="gameObject.ts"/>
 
-    private speed           : number = 0
-    private g               : number = 0 // gravity
-    private rotation        : number = 0
-    private rotationSpeed   : number = 0
+class Rock extends GameObject {
+    // Fields
+
+    private speed: number = 0
+    private g: number = 0 // gravity
+    private rotation: number = 0
+    private rotationSpeed: number = 0
 
     // Properties
-    public set Speed(s  : number)   { this.speed = s }     
+    public set Speed(s: number) {
+        this.speed = s
+    }
 
-	public get X()      : number    { return this.x    }
-	public set X(value  : number)   { this.x = value   }
+    public get X(): number {
+        return this.x
+    }
 
-	public get Y()      : number    { return this.y    }
-	public set Y(value  : number)   { this.y = value   }
+    public set X(value: number) {
+        this.x = value
+    }
+
+    public get Y(): number {
+        return this.y
+    }
+
+    public set Y(value: number) {
+        this.y = value
+    }
 
 
-    public get width()  : number    { return this.clientWidth }
-    public get height() : number    { return this.clientHeight }
+    public get width(): number {
+        return this.clientWidth
+    }
+
+    public get height(): number {
+        return this.clientHeight
+    }
 
     constructor(index) {
         super()
@@ -30,7 +47,7 @@ class Rock extends HTMLElement{
         parent.appendChild(this)
     }
 
-    public move():void {
+    public move(): void {
         // speed optellen zo lang we niet de bodem raken
         // speed wordt hoger dan 0 zodra de auto de rots raakt
         this.X += this.speed
@@ -38,7 +55,7 @@ class Rock extends HTMLElement{
         this.speed *= 0.98
         this.rotation += this.rotationSpeed
 
-        if (this.Y + this.clientHeight > document.getElementById("container").clientHeight){
+        if (this.Y + this.clientHeight > document.getElementById("container").clientHeight) {
             this.speed = 0
             this.g = 0
             this.rotationSpeed = 0
@@ -48,11 +65,7 @@ class Rock extends HTMLElement{
         this.draw()
     }
 
-    private draw() : void {
-        this.style.transform =`translate(${this.X}px,${this.Y}px)`
-    }
-
-    public crashed(carSpeed : number) {
+    public crashed(carSpeed: number) {
         this.g = 9.81
         this.speed = carSpeed
         this.rotationSpeed = 5

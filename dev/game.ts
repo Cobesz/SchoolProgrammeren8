@@ -11,6 +11,8 @@ class Game {
     constructor() {
         for(let i = 0 ; i < 6 ; i++) {
             this.addCarWithRock(i)
+
+            console.log(' hij compiled hoor')
         }
 
         this.gameLoop()

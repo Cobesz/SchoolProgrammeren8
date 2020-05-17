@@ -1,4 +1,19 @@
-class Wheel extends HTMLElement {
+class GameObject extends HTMLElement {
+    constructor() {
+        super();
+    }
+    hasCollision(gameObject) {
+        return;
+    }
+    move() {
+    }
+    draw() {
+        this.style.transform = `translate(${this.x}px,${this.y}px)`;
+    }
+    onCollision() {
+    }
+}
+class Wheel extends GameObject {
     constructor(car, offsetCarX) {
         super();
         this.style.transform = `translate(${offsetCarX}px, 30px)`;
@@ -6,11 +21,9 @@ class Wheel extends HTMLElement {
     }
 }
 window.customElements.define("wheel-component", Wheel);
-class Car extends HTMLElement {
+class Car extends GameObject {
     constructor(yIndex, game) {
         super();
-        this.x = 0;
-        this.y = 0;
         this.speed = Math.random() * 2 + 1;
         this.braking = false;
         this.stopped = false;
@@ -62,9 +75,6 @@ class Car extends HTMLElement {
     changeColor(deg) {
         this.style.filter = `hue-rotate(${deg}deg)`;
     }
-    draw() {
-        this.style.transform = `translate(${this.X}px,${this.Y}px)`;
-    }
 }
 window.customElements.define("car-component", Car);
 class Game {
@@ -76,6 +86,7 @@ class Game {
         this.gameover = false;
         for (let i = 0; i < 6; i++) {
             this.addCarWithRock(i);
+            console.log(' hij compiled hoor');
         }
         this.gameLoop();
     }
@@ -126,11 +137,9 @@ class Game {
     }
 }
 window.addEventListener("load", () => new Game());
-class Rock extends HTMLElement {
+class Rock extends GameObject {
     constructor(index) {
         super();
-        this.x = 0;
-        this.y = 0;
         this.speed = 0;
         this.g = 0;
         this.rotation = 0;
@@ -140,13 +149,27 @@ class Rock extends HTMLElement {
         let parent = document.getElementById("container");
         parent.appendChild(this);
     }
-    set Speed(s) { this.speed = s; }
-    get X() { return this.x; }
-    set X(value) { this.x = value; }
-    get Y() { return this.y; }
-    set Y(value) { this.y = value; }
-    get width() { return this.clientWidth; }
-    get height() { return this.clientHeight; }
+    set Speed(s) {
+        this.speed = s;
+    }
+    get X() {
+        return this.x;
+    }
+    set X(value) {
+        this.x = value;
+    }
+    get Y() {
+        return this.y;
+    }
+    set Y(value) {
+        this.y = value;
+    }
+    get width() {
+        return this.clientWidth;
+    }
+    get height() {
+        return this.clientHeight;
+    }
     move() {
         this.X += this.speed;
         this.Y += this.g;
@@ -158,9 +181,6 @@ class Rock extends HTMLElement {
             this.rotationSpeed = 0;
         }
         this.draw();
-    }
-    draw() {
-        this.style.transform = `translate(${this.X}px,${this.Y}px)`;
     }
     crashed(carSpeed) {
         this.g = 9.81;

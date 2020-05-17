@@ -1,10 +1,9 @@
 /// <reference path="wheel.ts"/>
+///<reference path="gameObject.ts"/>
 
-class Car extends HTMLElement {
+class Car extends GameObject {
     // Fields
     private game    : Game
-    private x       : number    = 0
-    private y       : number    = 0
     private speed   : number    = Math.random() * 2 + 1
     private braking : boolean   = false
     private stopped : boolean   = false
@@ -77,10 +76,6 @@ class Car extends HTMLElement {
 
     public changeColor(deg : number) : void {
         this.style.filter = `hue-rotate(${deg}deg)`
-    }
-
-    private draw() : void {
-        this.style.transform =`translate(${this.X}px,${this.Y}px)`
     }
 }
 
