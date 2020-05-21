@@ -1,22 +1,27 @@
-abstract class Ball extends HTMLElement{
+///<reference path="ballBehavior.ts"/>
 
-    protected readonly gravity    : number = 0.1
-    protected readonly friction   : number = 0.9
 
-    protected x           : number = 0
-    protected y           : number = 0
-    protected speedX      : number = 5
-    protected speedY      : number = -3
-    protected minWidth    : number = 0
-    protected maxWidth    : number = 0
-    protected maxHeight   : number = 0
+abstract class Ball extends HTMLElement {
 
-    
-    public get X() : number { return this.x }
-    
-    constructor(minWidth : number, maxWidth : number) {
+    protected ballBehavior! : BallBehavior
+    readonly gravity: number = 0.1
+    readonly friction: number = 0.9
+
+    x: number = 0
+    y: number = 0
+    speedX: number = 5
+    speedY: number = -3
+    minWidth: number = 0
+    maxWidth: number = 0
+    maxHeight: number = 0
+
+
+    public get X(): number {
+        return this.x
+    }
+
+    protected constructor(minWidth: number, maxWidth: number) {
         super()
-
         let content = document.getElementsByTagName("content")[0]
         content.appendChild(this)
 
@@ -24,14 +29,22 @@ abstract class Ball extends HTMLElement{
         this.x = (Math.random() * (maxWidth - minWidth)) + minWidth
         this.y = 100
 
-        this.minWidth   = minWidth
-        this.maxWidth   = maxWidth
-        this.maxHeight  = window.innerHeight - this.clientHeight
+        this.minWidth = minWidth
+        this.maxWidth = maxWidth
+        this.maxHeight = window.innerHeight - this.clientHeight
     }
 
-    abstract update() : void
+    public setBehavior(ballBehavior: BallBehavior) {
+        this.ballBehavior = ballBehavior
+
+    }
+
+    update(): void {
+        this.ballBehavior.performUpdate(this)
+        this.draw()
+    }
 
     public draw() {
-        this.style.transform = "translate("+this.x+"px, "+this.y+"px)"
+        this.style.transform = "translate(" + this.x + "px, " + this.y + "px)"
     }
 }
