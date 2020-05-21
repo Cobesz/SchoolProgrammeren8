@@ -1,61 +1,42 @@
-body {
-    background-color: #666;
-    font-family: Arial, Helvetica, sans-serif;
-    overflow:hidden;
-    margin:0px; padding:0px;
-    font-family: 'Press Start 2P', cursive;
+* {
+    box-sizing: border-box;
 }
-container {
-    display: block;
-    width: 1000px;
-    height: 600px;
-    margin: auto;
+
+body {
+    margin: 0px; padding: 0px;
     overflow: hidden;
 }
 
-container * {
+earthball-component, moonball-component {
+    background-image: url("../images/ball.png");
+    width: 100px; height: 100px;
     position: absolute;
+}
+basketball-component {
+    background-image: url("../images/basketball.png");
+    width: 100px; height: 100px;
+    position: absolute;
+}
+
+.earth {
+    background-image: url("../images/earth.jpg");
+    /* width: 300px; height: 500px; */
     display: block;
-    margin:0px; padding:0px;
-    box-sizing: border-box;
-    background-repeat: no-repeat;
 }
 
-
-
-score {
-    color:white;
-    font-size: 22px;
-    padding:20px;
+.moon {
+    background-image: url("../images/moon.jpg");
 }
 
-car-component {
-    background-image: url(../images/car.png);
-    width:145px; height: 45px;
+.space {
+    background-image: url("../images/space.jpg");
 }
 
-wheel-component {
-    background-image: url(../images/wheel.png);
-    width:22px; height: 22px;
+.row {
+    display: flex;
+    height: 100vh;
 }
 
-rock-component {
-    background-image: url(../images/rock.png);
-    width:62px; height: 62px;
-}
-
-cloud {
-    background-image: url(../images/cloud.png);
-    width:150px; height: 57px;
-    animation: cloudanimation 15s linear infinite;
-}
-
-@keyframes cloudanimation {
-  0% {
-    transform: translate(-150px, 30px);
-  }
-  
-  100% {
-    transform: translate(800px, 30px);
-  }
+.column {
+    flex: 50%;
 }
