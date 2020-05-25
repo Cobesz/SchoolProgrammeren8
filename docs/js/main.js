@@ -1,124 +1,56 @@
 "use strict";
-class Ball extends HTMLElement {
-    constructor(minWidth, maxWidth) {
-        super();
-        this.gravity = 0.1;
-        this.friction = 0.9;
+var Jibby = (function () {
+    function Jibby(parent) {
+        var _this = this;
+        this.div = document.createElement("jibby");
+        parent.appendChild(this.div);
         this.x = 0;
-        this.y = 0;
-        this.speedX = 5;
-        this.speedY = -3;
-        this.minWidth = 0;
-        this.maxWidth = 0;
-        this.maxHeight = 0;
-        let content = document.getElementsByTagName("content")[0];
-        content.appendChild(this);
-        maxWidth -= this.clientWidth;
-        this.x = (Math.random() * (maxWidth - minWidth)) + minWidth;
-        this.y = 100;
-        this.minWidth = minWidth;
-        this.maxWidth = maxWidth;
-        this.maxHeight = window.innerHeight - this.clientHeight;
+        this.y = 220;
+        this.hygiene = this.food = this.happyness = 50;
+        this.div.style.backgroundImage = "url('images/idle.png')";
+        this.div.addEventListener("click", function () { return _this.onPet(); });
+        document.getElementsByTagName("foodbutton")[0].addEventListener("click", function () { return _this.onEat(); });
+        document.getElementsByTagName("washbutton")[0].addEventListener("click", function () { return _this.onWash(); });
     }
-    get X() {
-        return this.x;
-    }
-    setBehavior(ballBehavior) {
-        this.ballBehavior = ballBehavior;
-    }
-    update() {
-        this.ballBehavior.performUpdate(this);
-        this.draw();
-    }
-    draw() {
-        this.style.transform = "translate(" + this.x + "px, " + this.y + "px)";
-    }
-}
-class BasketBall extends Ball {
-    constructor(minWidth, maxWidth) {
-        super(minWidth, maxWidth);
-    }
-}
-window.customElements.define("basketball-component", BasketBall);
-class Bouncing {
-    performUpdate(ball) {
-        if (ball.x < ball.minWidth) {
-            ball.x = ball.minWidth;
-            ball.speedX *= -1;
-            ball.speedX *= ball.friction;
-        }
-        if (ball.x > ball.maxWidth) {
-            ball.x = ball.maxWidth;
-            ball.speedX *= -1;
-            ball.speedX *= ball.friction;
-        }
-        if (ball.y + ball.speedY > ball.maxHeight) {
-            ball.y = ball.maxHeight;
-            ball.speedY *= -1;
-            ball.speedY *= ball.friction;
-            ball.speedX *= ball.friction;
-        }
-        else {
-            ball.speedY += ball.gravity;
-        }
-        ball.x += ball.speedX;
-        ball.y += ball.speedY;
-    }
-}
-class EarthBall extends Ball {
-    constructor(minWidth, maxWidth) {
-        super(minWidth, maxWidth);
-    }
-}
-window.customElements.define("earthball-component", EarthBall);
-class Main {
-    constructor() {
-        this.balls = [];
-        this.balls.push(new EarthBall(0, window.innerWidth / 2));
-        this.balls.push(new MoonBall(window.innerWidth / 2, window.innerWidth));
-        for (let ball of this.balls) {
-            if (ball.localName === "earthball-component") {
-                ball.setBehavior(new Bouncing());
-            }
-            else {
-                ball.setBehavior(new Space());
-            }
-        }
-        this.basketBall = new BasketBall(0, window.innerWidth);
-        this.basketBall.setBehavior(new Bouncing());
+    Jibby.prototype.update = function () {
+        this.hygiene -= 0.01;
+        this.food -= 0.02;
+        this.happyness -= 0.015;
+    };
+    Jibby.prototype.onPet = function () {
+        console.log("you clicked on jibby!");
+        this.div.style.backgroundImage = "url('images/happy.png')";
+    };
+    Jibby.prototype.onWash = function () {
+        console.log("washing jibby!");
+        this.div.style.backgroundImage = "url('images/washing.png')";
+    };
+    Jibby.prototype.onEat = function () {
+        console.log("jibby is eating!");
+        this.div.style.backgroundImage = "url('images/eating.gif')";
+    };
+    return Jibby;
+}());
+var Game = (function () {
+    function Game() {
+        var container = document.getElementById("container");
+        this.jibby = new Jibby(container);
         this.gameLoop();
     }
-    gameLoop() {
-        for (const ball of this.balls) {
-            ball.update();
-        }
-        if (this.basketBall.x <= window.innerWidth / 2) {
-            this.basketBall.setBehavior(new Bouncing());
-        }
-        else {
-            this.basketBall.setBehavior(new Space());
-        }
-        this.basketBall.update();
-        requestAnimationFrame(() => this.gameLoop());
-    }
-}
-window.addEventListener("load", () => new Main());
-class MoonBall extends Ball {
-    constructor(minWidth, maxWidth) {
-        super(minWidth, maxWidth);
-    }
-}
-window.customElements.define("moonball-component", MoonBall);
-class Space {
-    performUpdate(ball) {
-        ball.x += ball.speedX;
-        ball.y += ball.speedY;
-        if (ball.x < ball.minWidth || ball.x > ball.maxWidth) {
-            ball.speedX *= -1;
-        }
-        if (ball.y < 0 || ball.y > ball.maxHeight) {
-            ball.speedY *= -1;
-        }
-    }
-}
+    Game.prototype.gameLoop = function () {
+        var _this = this;
+        this.jibby.update();
+        this.updateUI();
+        requestAnimationFrame(function () { return _this.gameLoop(); });
+    };
+    Game.prototype.updateUI = function () {
+        document.getElementsByTagName("food")[0].innerHTML = Math.round(this.jibby.food).toString();
+        document.getElementsByTagName("happyness")[0].innerHTML = Math.round(this.jibby.happyness).toString();
+        document.getElementsByTagName("hygiene")[0].innerHTML = Math.round(this.jibby.hygiene).toString();
+    };
+    return Game;
+}());
+window.addEventListener("load", function () {
+    new Game();
+});
 //# sourceMappingURL=main.js.map
