@@ -2,15 +2,17 @@
 
 class PirateShip extends Ship {
     // Fields
-    private captain         : Captain
+    private captain: Captain
 
-    private numberOfHits    : number = 0
+    private numberOfHits: number = 0
     private _hit: boolean = false
-    
-    private previousHit     : boolean = false
+
+    private previousHit: boolean = false
 
     // Properties
-    public set hit(value: boolean)  { this._hit = value     }
+    public set hit(value: boolean) {
+        this._hit = value
+    }
 
     constructor() {
         super()
@@ -27,7 +29,7 @@ class PirateShip extends Ship {
     }
 
     private checkCollision() {
-        if(this._hit && !this.previousHit) {
+        if (this._hit && !this.previousHit) {
             this.captain.onCollision(++this.numberOfHits)
 
             let times = this.numberOfHits == 1 ? "time" : "times"

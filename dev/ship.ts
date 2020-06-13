@@ -11,9 +11,15 @@ class Ship extends HTMLElement{
 
     private colors          : string[] = ["Green", "Blue", "Orange", "White", "Black", "Red"]
     private _color          : string   = ""
+
     // Properties
-    public get position()   : Vector    { return this._position }
-    public get color()      : string    { return this._color    }
+    public get position(): Vector {
+        return this._position
+    }
+
+    public get color(): string {
+        return this._color
+    }
 
     constructor() {
         super()

@@ -29,6 +29,7 @@ class Main {
         for (let i = 0; i < 10; i++) {
             this.ships.push(new PirateShip());
         }
+        Messageboard.getInstance();
         this.gameLoop();
     }
     gameLoop() {
@@ -50,70 +51,94 @@ class Main {
     }
 }
 window.addEventListener("load", () => new Main());
-class Ship extends HTMLElement {
+class Messageboard extends HTMLElement {
     constructor() {
         super();
-        this.rotation = 0;
-        this.rotationSpeed = 0;
-        this.counter = 60;
-        this.colors = ["Green", "Blue", "Orange", "White", "Black", "Red"];
-        this._color = "";
-        this._position = new Vector(Math.random() * window.innerWidth - this.clientWidth, Math.random() * window.innerHeight - this.clientHeight);
-        this.speed = new Vector(2, 4);
-        this.rotation = 180;
-        this.createShip();
+        this.createMessageBoard();
     }
-    get position() { return this._position; }
-    get color() { return this._color; }
-    createShip() {
+    createMessageBoard() {
         let game = document.getElementsByTagName("game")[0];
         game.appendChild(this);
-        Ship.numberOfShips++;
-        if (Ship.numberOfShips > 6)
-            Ship.numberOfShips = 1;
-        this.style.backgroundImage = `url(images/ship${Ship.numberOfShips + 3}.png)`;
-        this._color = this.colors[Ship.numberOfShips - 1];
     }
-    update() {
-        this._position.x += Math.cos(this.degToRad(this.rotation)) * this.speed.x;
-        this._position.y += Math.sin(this.degToRad(this.rotation)) * this.speed.y;
-        this.turn();
-        this.keepInWindow();
-        this.draw();
-    }
-    turn() {
-        this.counter++;
-        if (this.counter > 60) {
-            this.counter = 0;
-            this.rotationSpeed = Math.round(Math.random() * 3);
-            this.rotationSpeed *= Math.random() < 0.5 ? -1 : 1;
+    static getInstance() {
+        if (!Messageboard.instance) {
+            Messageboard.instance = new Messageboard();
         }
-        this.rotation += this.rotationSpeed;
-    }
-    keepInWindow() {
-        if (this._position.x + this.clientWidth < 0)
-            this._position.x = window.innerWidth;
-        if (this._position.y + this.clientHeight < 0)
-            this._position.y = window.innerHeight;
-        if (this._position.x > window.innerWidth)
-            this._position.x = 0;
-        if (this._position.y > window.innerHeight)
-            this._position.y = 0;
-    }
-    draw() {
-        this.style.transform = `translate(${this._position.x}px, ${this._position.y}px) rotate(${this.rotation}deg)`;
-    }
-    degToRad(degrees) {
-        return degrees * Math.PI / 180;
-    }
-    hasCollision(ship) {
-        return (ship._position.x < this._position.x + this.clientWidth &&
-            ship._position.x + ship.clientWidth > this._position.x &&
-            ship._position.y < this._position.y + this.clientHeight &&
-            ship._position.y + ship.clientHeight > this._position.y);
+        return Messageboard.instance;
     }
 }
-Ship.numberOfShips = 0;
+window.customElements.define("messageboard-component", Messageboard);
+let Ship = (() => {
+    class Ship extends HTMLElement {
+        constructor() {
+            super();
+            this.rotation = 0;
+            this.rotationSpeed = 0;
+            this.counter = 60;
+            this.colors = ["Green", "Blue", "Orange", "White", "Black", "Red"];
+            this._color = "";
+            this._position = new Vector(Math.random() * window.innerWidth - this.clientWidth, Math.random() * window.innerHeight - this.clientHeight);
+            this.speed = new Vector(2, 4);
+            this.rotation = 180;
+            this.createShip();
+        }
+        get position() {
+            return this._position;
+        }
+        get color() {
+            return this._color;
+        }
+        createShip() {
+            let game = document.getElementsByTagName("game")[0];
+            game.appendChild(this);
+            Ship.numberOfShips++;
+            if (Ship.numberOfShips > 6)
+                Ship.numberOfShips = 1;
+            this.style.backgroundImage = `url(images/ship${Ship.numberOfShips + 3}.png)`;
+            this._color = this.colors[Ship.numberOfShips - 1];
+        }
+        update() {
+            this._position.x += Math.cos(this.degToRad(this.rotation)) * this.speed.x;
+            this._position.y += Math.sin(this.degToRad(this.rotation)) * this.speed.y;
+            this.turn();
+            this.keepInWindow();
+            this.draw();
+        }
+        turn() {
+            this.counter++;
+            if (this.counter > 60) {
+                this.counter = 0;
+                this.rotationSpeed = Math.round(Math.random() * 3);
+                this.rotationSpeed *= Math.random() < 0.5 ? -1 : 1;
+            }
+            this.rotation += this.rotationSpeed;
+        }
+        keepInWindow() {
+            if (this._position.x + this.clientWidth < 0)
+                this._position.x = window.innerWidth;
+            if (this._position.y + this.clientHeight < 0)
+                this._position.y = window.innerHeight;
+            if (this._position.x > window.innerWidth)
+                this._position.x = 0;
+            if (this._position.y > window.innerHeight)
+                this._position.y = 0;
+        }
+        draw() {
+            this.style.transform = `translate(${this._position.x}px, ${this._position.y}px) rotate(${this.rotation}deg)`;
+        }
+        degToRad(degrees) {
+            return degrees * Math.PI / 180;
+        }
+        hasCollision(ship) {
+            return (ship._position.x < this._position.x + this.clientWidth &&
+                ship._position.x + ship.clientWidth > this._position.x &&
+                ship._position.y < this._position.y + this.clientHeight &&
+                ship._position.y + ship.clientHeight > this._position.y);
+        }
+    }
+    Ship.numberOfShips = 0;
+    return Ship;
+})();
 class PirateShip extends Ship {
     constructor() {
         super();
@@ -122,7 +147,9 @@ class PirateShip extends Ship {
         this.previousHit = false;
         this.captain = new Captain(this);
     }
-    set hit(value) { this._hit = value; }
+    set hit(value) {
+        this._hit = value;
+    }
     update() {
         this.checkCollision();
         this.captain.update();

@@ -8,6 +8,7 @@ class Main {
         }
 
         // Eventueel Messageboard aanmaken zodat deze zichtbaar wordt?
+        Messageboard.getInstance();
 
         this.gameLoop()
     }
