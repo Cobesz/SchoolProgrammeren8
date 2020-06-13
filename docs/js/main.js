@@ -49,8 +49,14 @@ class Main {
         }
         requestAnimationFrame(() => this.gameLoop());
     }
+    static getInstance() {
+        if (!Main.instance) {
+            Main.instance = new Main();
+        }
+        return Main.instance;
+    }
 }
-window.addEventListener("load", () => new Main());
+window.addEventListener("load", () => Main.getInstance());
 class Messageboard extends HTMLElement {
     constructor() {
         super();

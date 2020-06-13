@@ -1,8 +1,10 @@
 class Main {
 
-    private ships : PirateShip[] = []
+    private static instance: Main;
 
-    constructor() {
+    private ships: PirateShip[] = []
+
+    private constructor() {
         for (let i = 0; i < 10; i++) {
             this.ships.push(new PirateShip())
         }
@@ -18,21 +20,28 @@ class Main {
             ship.update()
 
             for (const otherShip of this.ships) {
-                if(ship !== otherShip) {
-                    if(ship.hasCollision(otherShip)) {
+                if (ship !== otherShip) {
+                    if (ship.hasCollision(otherShip)) {
                         ship.hit = true
                         // break inner loop to prevent overwriting the hit
                         break
-                    } 
-                    else {
+                    } else {
                         ship.hit = false
                     }
                 }
             }
         }
 
+
         requestAnimationFrame(() => this.gameLoop())
+    }
+
+    public static getInstance() {
+        if (!Main.instance) {
+            Main.instance = new Main()
+        }
+        return Main.instance
     }
 }
 
-window.addEventListener("load", () => new Main())
+window.addEventListener("load", () => Main.getInstance())
