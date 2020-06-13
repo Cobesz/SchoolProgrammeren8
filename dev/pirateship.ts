@@ -33,7 +33,11 @@ class PirateShip extends Ship {
             this.captain.onCollision(++this.numberOfHits)
 
             let times = this.numberOfHits == 1 ? "time" : "times"
-            console.log(`${this.color} pirateship got hit ${this.numberOfHits} ${times}!`)
+
+            let message = document.createElement('message');
+            message.append(`${this.color} pirateship got hit ${this.numberOfHits} ${times}!`)
+
+            Messageboard.getInstance().appendChild(message)
         }
 
         this.previousHit = this._hit
