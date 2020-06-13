@@ -1,147 +1,153 @@
 "use strict";
-var Jibby = (function () {
-    function Jibby(parent) {
-        var _this = this;
-        this.div = document.createElement("jibby");
-        parent.appendChild(this.div);
-        this.state = new Idle(this);
-        this.x = 0;
-        this.y = 220;
-        this.div.style.backgroundImage = "url('images/idle.png')";
-        this.div.addEventListener("click", function () { return _this.onPet(); });
-        document.getElementsByTagName("foodbutton")[0].addEventListener("click", function () { return _this.onEat(); });
-        document.getElementsByTagName("washbutton")[0].addEventListener("click", function () { return _this.onWash(); });
-        this.behavior = be;
+class Captain extends HTMLElement {
+    constructor(ship) {
+        super();
+        this.ship = ship;
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this);
     }
-    Object.defineProperty(Jibby.prototype, "behavior", {
-        get: function () {
-            return this._behavior;
-        },
-        set: function (value) {
-            this._behavior = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Jibby.prototype, "dead", {
-        get: function () {
-            return this._dead;
-        },
-        set: function (value) {
-            this._dead = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Jibby.prototype, "state", {
-        get: function () {
-            return this._state;
-        },
-        set: function (value) {
-            this._state = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Jibby.prototype.update = function () {
-        this.state.update();
-        if (this.state.hygiene === 0 || this.state.hunger === 0 || this.state.happyness === 0) {
-            this.dead = true;
+    update() {
+        let x = this.ship.position.x + this.ship.clientWidth / 2;
+        let y = this.ship.position.y;
+        this.style.transform = `translate(${x}px, ${y}px) rotate(${0}deg)`;
+    }
+    onCollision(numberOfHits) {
+        if (numberOfHits == 1) {
+            this.style.backgroundImage = `url(images/emote_alert.png)`;
+            console.log(`Captain of ${this.ship.color} pirateship WOKE UP!`);
         }
-    };
-    Jibby.prototype.onPet = function () {
-        console.log("you clicked on jibby!");
-        this.div.style.backgroundImage = "url('images/happy.png')";
-    };
-    Jibby.prototype.onWash = function () {
-        console.log("washing jibby!");
-        this.div.style.backgroundImage = "url('images/washing.png')";
-    };
-    Jibby.prototype.onEat = function () {
-        console.log("jibby is eating!");
-        this.div.style.backgroundImage = "url('images/eating.gif')";
-    };
-    return Jibby;
-}());
-var Game = (function () {
-    function Game() {
-        var container = document.getElementById("container");
-        this.jibby = new Jibby(container);
+        else if (numberOfHits == 7) {
+            this.style.backgroundImage = `url(images/emote_faceAngry.png)`;
+            console.log(`Captain of ${this.ship.color} pirateship got ANGRY!`);
+        }
+    }
+}
+window.customElements.define("captain-component", Captain);
+class Main {
+    constructor() {
+        this.ships = [];
+        for (let i = 0; i < 10; i++) {
+            this.ships.push(new PirateShip());
+        }
         this.gameLoop();
-        console.log('deno test');
     }
-    Game.prototype.gameLoop = function () {
-        var _this = this;
-        this.jibby.update();
-        this.updateUI();
-        requestAnimationFrame(function () { return _this.gameLoop(); });
-    };
-    Game.prototype.updateUI = function () {
-        document.getElementsByTagName("food")[0].innerHTML = Math.round(this.jibby.state.hunger).toString();
-        document.getElementsByTagName("happyness")[0].innerHTML = Math.round(this.jibby.state.happyness).toString();
-        document.getElementsByTagName("hygiene")[0].innerHTML = Math.round(this.jibby.state.hygiene).toString();
-    };
-    return Game;
-}());
-window.addEventListener("load", function () {
-    new Game();
-});
-var Dead = (function () {
-    function Dead() {
+    gameLoop() {
+        for (const ship of this.ships) {
+            ship.update();
+            for (const otherShip of this.ships) {
+                if (ship !== otherShip) {
+                    if (ship.hasCollision(otherShip)) {
+                        ship.hit = true;
+                        break;
+                    }
+                    else {
+                        ship.hit = false;
+                    }
+                }
+            }
+        }
+        requestAnimationFrame(() => this.gameLoop());
     }
-    return Dead;
-}());
-var Eating = (function () {
-    function Eating() {
+}
+window.addEventListener("load", () => new Main());
+class Ship extends HTMLElement {
+    constructor() {
+        super();
+        this.rotation = 0;
+        this.rotationSpeed = 0;
+        this.counter = 60;
+        this.colors = ["Green", "Blue", "Orange", "White", "Black", "Red"];
+        this._color = "";
+        this._position = new Vector(Math.random() * window.innerWidth - this.clientWidth, Math.random() * window.innerHeight - this.clientHeight);
+        this.speed = new Vector(2, 4);
+        this.rotation = 180;
+        this.createShip();
     }
-    Eating.prototype.onEat = function () {
-    };
-    Eating.prototype.onPet = function () {
-    };
-    Eating.prototype.onWash = function () {
-    };
-    Eating.prototype.performBehavior = function () {
-    };
-    return Eating;
-}());
-var Idle = (function () {
-    function Idle(jibby) {
-        this.hygiene = this.hunger = this.happyness = 50;
+    get position() { return this._position; }
+    get color() { return this._color; }
+    createShip() {
+        let game = document.getElementsByTagName("game")[0];
+        game.appendChild(this);
+        Ship.numberOfShips++;
+        if (Ship.numberOfShips > 6)
+            Ship.numberOfShips = 1;
+        this.style.backgroundImage = `url(images/ship${Ship.numberOfShips + 3}.png)`;
+        this._color = this.colors[Ship.numberOfShips - 1];
     }
-    Idle.prototype.update = function () {
-        var _this = this;
-        setInterval(function () {
-            _this.hygiene -= 0.01;
-            _this.hunger -= 0.02;
-            _this.happyness -= 0.015;
-        }, 1000);
-    };
-    return Idle;
-}());
-var Petting = (function () {
-    function Petting() {
+    update() {
+        this._position.x += Math.cos(this.degToRad(this.rotation)) * this.speed.x;
+        this._position.y += Math.sin(this.degToRad(this.rotation)) * this.speed.y;
+        this.turn();
+        this.keepInWindow();
+        this.draw();
     }
-    Petting.prototype.onEat = function () {
-    };
-    Petting.prototype.onPet = function () {
-    };
-    Petting.prototype.onWash = function () {
-    };
-    Petting.prototype.performBehavior = function () {
-    };
-    return Petting;
-}());
-var Washing = (function () {
-    function Washing() {
+    turn() {
+        this.counter++;
+        if (this.counter > 60) {
+            this.counter = 0;
+            this.rotationSpeed = Math.round(Math.random() * 3);
+            this.rotationSpeed *= Math.random() < 0.5 ? -1 : 1;
+        }
+        this.rotation += this.rotationSpeed;
     }
-    Washing.prototype.onEat = function () {
-    };
-    Washing.prototype.onPet = function () {
-    };
-    Washing.prototype.onWash = function () {
-    };
-    Washing.prototype.performBehavior = function () {
-    };
-    return Washing;
-}());
+    keepInWindow() {
+        if (this._position.x + this.clientWidth < 0)
+            this._position.x = window.innerWidth;
+        if (this._position.y + this.clientHeight < 0)
+            this._position.y = window.innerHeight;
+        if (this._position.x > window.innerWidth)
+            this._position.x = 0;
+        if (this._position.y > window.innerHeight)
+            this._position.y = 0;
+    }
+    draw() {
+        this.style.transform = `translate(${this._position.x}px, ${this._position.y}px) rotate(${this.rotation}deg)`;
+    }
+    degToRad(degrees) {
+        return degrees * Math.PI / 180;
+    }
+    hasCollision(ship) {
+        return (ship._position.x < this._position.x + this.clientWidth &&
+            ship._position.x + ship.clientWidth > this._position.x &&
+            ship._position.y < this._position.y + this.clientHeight &&
+            ship._position.y + ship.clientHeight > this._position.y);
+    }
+}
+Ship.numberOfShips = 0;
+class PirateShip extends Ship {
+    constructor() {
+        super();
+        this.numberOfHits = 0;
+        this._hit = false;
+        this.previousHit = false;
+        this.captain = new Captain(this);
+    }
+    set hit(value) { this._hit = value; }
+    update() {
+        this.checkCollision();
+        this.captain.update();
+        super.update();
+    }
+    checkCollision() {
+        if (this._hit && !this.previousHit) {
+            this.captain.onCollision(++this.numberOfHits);
+            let times = this.numberOfHits == 1 ? "time" : "times";
+            console.log(`${this.color} pirateship got hit ${this.numberOfHits} ${times}!`);
+        }
+        this.previousHit = this._hit;
+    }
+}
+window.customElements.define("ship-component", PirateShip);
+class Vector {
+    constructor(x, y) {
+        this._x = 0;
+        this._y = 0;
+        this._x = x;
+        this._y = y;
+    }
+    get x() { return this._x; }
+    set x(value) { this._x = value; }
+    get y() { return this._y; }
+    set y(value) { this._y = value; }
+}
 //# sourceMappingURL=main.js.map
