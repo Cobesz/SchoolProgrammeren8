@@ -33,6 +33,11 @@ class Main {
         }
 
 
+        let messages = document.getElementsByTagName('message')
+        if (messages.length > 9) {
+            messages[0].parentNode.removeChild(messages[0]);
+        }
+
         requestAnimationFrame(() => this.gameLoop())
     }
 
