@@ -1,7 +1,7 @@
 /// <reference path="gameobject.ts" />
 
-class Horn extends GameObject {
-    
+class Horn extends GameObject implements Subject {
+
     constructor() {
         super()
 
@@ -15,6 +15,17 @@ class Horn extends GameObject {
         })
 
         this.draw()
+    }
+
+    notifyObserver(): void {
+    }
+
+    register(observer: Observer): void {
+        console.log(observer)
+    }
+
+    unRegister(observer: Observer): void {
+        console.log(observer)
     }
 }
 

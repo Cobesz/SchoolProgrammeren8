@@ -4,6 +4,8 @@ class Captain extends HTMLElement {
         super();
         pirateShip.appendChild(this);
     }
+    notify() {
+    }
 }
 window.customElements.define("captain-component", Captain);
 class GameObject extends HTMLElement {
@@ -29,6 +31,14 @@ class Horn extends GameObject {
             console.log(e);
         });
         this.draw();
+    }
+    notifyObserver() {
+    }
+    register(observer) {
+        console.log(observer);
+    }
+    unRegister(observer) {
+        console.log(observer);
     }
 }
 window.customElements.define("horn-component", Horn);
@@ -87,6 +97,16 @@ class PirateShip extends Ship {
             console.log(e);
         });
         this.draw();
+    }
+    notifyObserver() {
+    }
+    register(observer) {
+        console.log(observer);
+    }
+    unRegister(observer) {
+        console.log(observer);
+    }
+    notify() {
     }
 }
 window.customElements.define("ship-component", PirateShip);

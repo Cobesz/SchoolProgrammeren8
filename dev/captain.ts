@@ -1,9 +1,12 @@
-class Captain extends HTMLElement{
-    
-    constructor(pirateShip : PirateShip) {
+class Captain extends HTMLElement implements Observer {
+
+    constructor(pirateShip: PirateShip) {
         super()
 
         pirateShip.appendChild(this)
+    }
+
+    notify(): void {
     }
 }
 
