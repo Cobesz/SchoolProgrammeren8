@@ -9,6 +9,9 @@ class PirateShip extends Ship {
 
         this.captain = new Captain(this)
 
+        this.captain.addEventListener('click', e => {
+            console.log(e);
+        })
         this.draw()
     }
     
