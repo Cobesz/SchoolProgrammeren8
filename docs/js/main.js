@@ -107,8 +107,19 @@ class PirateShip extends Ship {
     constructor() {
         super();
         this.observers = [];
+        this.listening = false;
         this.captain = new Captain(this);
-        this.captain.addEventListener('click', () => {
+        this.addEventListener('click', () => {
+            if (!this.listening) {
+                this.listening = true;
+                this.style.backgroundImage = this.activeImage;
+                Horn.getInstance().register(this);
+            }
+            else {
+                this.listening = false;
+                this.style.backgroundImage = "url(images/ship-unregistered.png)";
+                Horn.getInstance().unRegister(this);
+            }
             this.notifyObserver();
         });
         this.draw();
@@ -126,6 +137,8 @@ class PirateShip extends Ship {
         this.observers.splice(index, 1);
     }
     notify() {
+        console.log("PirateShip listening: " + this.listening);
+        this.register(this.captain);
     }
 }
 window.customElements.define("ship-component", PirateShip);

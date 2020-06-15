@@ -34,10 +34,6 @@ class Horn extends GameObject implements Subject {
     }
 
     public static getInstance(): Horn {
-        // if (!Messageboard.instance) {
-        //     Messageboard.instance = new Messageboard()
-        // }
-        // return Messageboard.instance
 
         if(!Horn.instance) {
             Horn.instance = new Horn()
