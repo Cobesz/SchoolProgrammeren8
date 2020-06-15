@@ -1,19 +1,17 @@
-# PRG08-Angry-Captain
+# PRG08-Angry-Captain-completed
 
-Toevoegen van het Singleton Pattern zodat alle piratenschepen en kapiteinen makkelijk een berichtje op het Messageboard kunnen plaatsen
+Toevoegen van het Observer Pattern om de kapitein wakker te maken en een bericht te plaatsen op het mesaggeboard.
+
+![image of Notify the Captain](notify-the-captain.png)
 
 ## Game play
 
-- [Demo van Angry Captain](https://hr-cmgt.github.io/PRG08-Angry-Captain-completed/)
-- Wanneer een schip **voor de eerste keer** tegen een ander schip botst
-    - moet er een bericht van deze gebeurtenis op het `Messageboard` komen te staan
-    - wordt de `Captain` *wakker* en dit wordt op het `Messageboard` gezet
-- **Elke volgende keer** dat een schip tegen een ander schip botst
-    - moet er een bericht van deze gebeurtenis op het `Messageboard` komen te staan
-- Is een schip **voor de zevende keer** tegen een ander schip gebotst
-    - dan wordt de `Captain` *boos* en dit wordt op het `Messageboard` gezet
+- Wanneer op de horn wordt geklikt, komt er een bericht van activatie op het messageboard te staan. 
+- Wanneer op een piratenboot geklikt wordt, zal deze actief worden (verandert naar een gekleurd plaatje) en 'luistert' dan ook naar de horn. 
+- Klik je nog een keer op een piratenboot, dan luistert deze niet meer en krijgt een grijze kleur. 
+- Wanneer een piratenboot actief is en de horn gaat af, dan wordt de kapitein op dat schip wakker. 
+
 
 ## Opdracht
-- Teken het klassendiagram waarbij je er rekening mee houdt dat het `Messageboard` een *Singleton* is.
-- Maak het `Messageboard` in code en pas het *Singleton Pattern* toe.
-- Plaats de berichten op het `Messageboard` zoals hierboven beschreven.
+- Teken het klassendiagram en pas het *Observer Pattern* toe.
+- Maak de code af volgens boven beschreven regels. 

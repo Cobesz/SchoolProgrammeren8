@@ -1,24 +1,20 @@
-class Messageboard extends HTMLElement {
+/// <reference path="gameobject.ts" />
 
-    private static instance: Messageboard;
 
-    private constructor() {
+class MessageBoard extends GameObject{
+    // Fields
+    // private messages : HTMLElement[] = []
+
+    public constructor() {
         super()
-
-        this.createMessageBoard();
     }
-
-    private createMessageBoard() {
-        let game = document.getElementsByTagName("game")[0]
-        game.appendChild(this)
-    }
-
-    public static getInstance(): Messageboard {
-        if (!Messageboard.instance) {
-            Messageboard.instance = new Messageboard()
-        }
-        return Messageboard.instance
+    
+    public addMessage(text : string) {
+        let message = document.createElement("message")
+        message.innerHTML = text
+        this.appendChild(message) 
+        
     }
 }
 
-window.customElements.define("messageboard-component", Messageboard as any)
+window.customElements.define("messageboard-component", MessageBoard as any)

@@ -1,17 +1,17 @@
 class Main {
 
-    private static instance: Main;
+    private ships : PirateShip[] = []
 
-    private ships: PirateShip[] = []
+    constructor() {
+        // Subject
+        let horn : Horn = new Horn()
 
-    private constructor() {
         for (let i = 0; i < 10; i++) {
+            // Observers
             this.ships.push(new PirateShip())
         }
 
-        // Eventueel Messageboard aanmaken zodat deze zichtbaar wordt?
-        Messageboard.getInstance();
-
+        let messageboard : MessageBoard = new MessageBoard()
         this.gameLoop()
     }
 
@@ -40,13 +40,6 @@ class Main {
 
         requestAnimationFrame(() => this.gameLoop())
     }
-
-    public static getInstance() {
-        if (!Main.instance) {
-            Main.instance = new Main()
-        }
-        return Main.instance
-    }
 }
 
-window.addEventListener("load", () => Main.getInstance())
+window.addEventListener("load", () => new Main())
