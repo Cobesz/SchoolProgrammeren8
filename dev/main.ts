@@ -4,13 +4,7 @@ class Main {
 
     constructor() {
         // Subject
-        let horn: Horn = new Horn()
-
-        horn.addEventListener('click', e => {
-            console.log(e);
-            // this.posy -= this.random(300, window.innerHeight);
-            // Game.getInstance().scorePoint(); // Gets current instance of the game
-        })
+        new Horn();
 
         for (let i = 0; i < 10; i++) {
             // Observers

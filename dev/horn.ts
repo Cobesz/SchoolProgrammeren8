@@ -9,6 +9,11 @@ class Horn extends GameObject {
             window.innerWidth / 2 - this.clientWidth / 2,
             window.innerHeight / 2 - this.clientHeight / 2)
 
+
+        this.addEventListener('click', e => {
+            console.log(e);
+        })
+
         this.draw()
     }
 }

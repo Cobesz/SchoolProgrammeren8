@@ -25,6 +25,9 @@ class Horn extends GameObject {
     constructor() {
         super();
         this._position = new Vector(window.innerWidth / 2 - this.clientWidth / 2, window.innerHeight / 2 - this.clientHeight / 2);
+        this.addEventListener('click', e => {
+            console.log(e);
+        });
         this.draw();
     }
 }
@@ -32,10 +35,7 @@ window.customElements.define("horn-component", Horn);
 class Main {
     constructor() {
         this.ships = [];
-        let horn = new Horn();
-        horn.addEventListener('click', e => {
-            console.log(e);
-        });
+        new Horn();
         for (let i = 0; i < 10; i++) {
             this.ships.push(new PirateShip());
         }
