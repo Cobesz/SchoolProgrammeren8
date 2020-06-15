@@ -2,9 +2,10 @@
 class Captain extends HTMLElement {
     constructor(pirateShip) {
         super();
-        pirateShip.appendChild(this);
+        this.pirateShip = pirateShip;
     }
     notify() {
+        this.pirateShip.appendChild(this);
     }
 }
 window.customElements.define("captain-component", Captain);
@@ -26,31 +27,36 @@ class GameObject extends HTMLElement {
 class Horn extends GameObject {
     constructor() {
         super();
+        this.observers = [];
         this._position = new Vector(window.innerWidth / 2 - this.clientWidth / 2, window.innerHeight / 2 - this.clientHeight / 2);
-        this.addEventListener('click', e => {
-            console.log(e);
+        this.addEventListener('click', () => {
+            this.notifyObserver();
         });
         this.draw();
     }
     notifyObserver() {
+        for (const observer of this.observers) {
+            observer.notify();
+        }
     }
     register(observer) {
-        console.log(observer);
+        this.observers.push(observer);
     }
     unRegister(observer) {
-        console.log(observer);
+        let index = this.observers.indexOf(observer);
+        this.observers.splice(index, 1);
     }
 }
 window.customElements.define("horn-component", Horn);
 class Main {
     constructor() {
         this.ships = [];
-        new Horn();
+        let horn = new Horn();
         for (let i = 0; i < 10; i++) {
             this.ships.push(new PirateShip());
         }
         let messageboard = new MessageBoard();
-        messageboard.addMessage('Begonnen');
+        horn.register(messageboard);
     }
 }
 window.addEventListener("load", () => new Main());
@@ -62,6 +68,9 @@ class MessageBoard extends GameObject {
         let message = document.createElement("message");
         message.innerHTML = text;
         this.appendChild(message);
+    }
+    notify() {
+        this.addMessage('Horn was pressed!');
     }
 }
 window.customElements.define("messageboard-component", MessageBoard);
@@ -92,19 +101,24 @@ let Ship = (() => {
 class PirateShip extends Ship {
     constructor() {
         super();
+        this.observers = [];
         this.captain = new Captain(this);
-        this.captain.addEventListener('click', e => {
-            console.log(e);
+        this.captain.addEventListener('click', () => {
+            this.notifyObserver();
         });
         this.draw();
     }
     notifyObserver() {
+        for (const observer of this.observers) {
+            observer.notify();
+        }
     }
     register(observer) {
-        console.log(observer);
+        this.observers.push(observer);
     }
     unRegister(observer) {
-        console.log(observer);
+        let index = this.observers.indexOf(observer);
+        this.observers.splice(index, 1);
     }
     notify() {
     }

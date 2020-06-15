@@ -1,12 +1,15 @@
 class Captain extends HTMLElement implements Observer {
 
+    private pirateShip: PirateShip;
+
     constructor(pirateShip: PirateShip) {
         super()
 
-        pirateShip.appendChild(this)
+        this.pirateShip = pirateShip
     }
 
     notify(): void {
+        this.pirateShip.appendChild(this)
     }
 }
 

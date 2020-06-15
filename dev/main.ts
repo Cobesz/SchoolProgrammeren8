@@ -4,7 +4,7 @@ class Main {
 
     constructor() {
         // Subject
-        new Horn();
+        let horn = new Horn();
 
         for (let i = 0; i < 10; i++) {
             // Observers
@@ -12,7 +12,7 @@ class Main {
         }
 
         let messageboard: MessageBoard = new MessageBoard()
-        messageboard.addMessage('Begonnen');
+        horn.register(messageboard)
     }
 }
 

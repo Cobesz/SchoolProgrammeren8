@@ -1,7 +1,7 @@
 /// <reference path="gameobject.ts" />
 
 
-class MessageBoard extends GameObject{
+class MessageBoard extends GameObject implements Observer{
     // Fields
     // private messages : HTMLElement[] = []
 
@@ -14,6 +14,10 @@ class MessageBoard extends GameObject{
         message.innerHTML = text
         this.appendChild(message) 
         
+    }
+
+    notify(): void {
+        this.addMessage('Horn was pressed!')
     }
 }
 
