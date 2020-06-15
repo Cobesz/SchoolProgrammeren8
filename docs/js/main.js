@@ -46,17 +46,22 @@ class Horn extends GameObject {
         let index = this.observers.indexOf(observer);
         this.observers.splice(index, 1);
     }
+    static getInstance() {
+        if (!Horn.instance) {
+            Horn.instance = new Horn();
+        }
+        return Horn.instance;
+    }
 }
 window.customElements.define("horn-component", Horn);
 class Main {
     constructor() {
         this.ships = [];
-        let horn = new Horn();
         for (let i = 0; i < 10; i++) {
             this.ships.push(new PirateShip());
         }
         let messageboard = new MessageBoard();
-        horn.register(messageboard);
+        Horn.getInstance().register(messageboard);
     }
 }
 window.addEventListener("load", () => new Main());

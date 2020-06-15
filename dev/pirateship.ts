@@ -33,6 +33,7 @@ class PirateShip extends Ship implements Subject, Observer {
     }
 
     notify(): void {
+
     }
 
 }

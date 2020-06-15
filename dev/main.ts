@@ -3,8 +3,6 @@ class Main {
     private ships: PirateShip[] = []
 
     constructor() {
-        // Subject
-        let horn = new Horn();
 
         for (let i = 0; i < 10; i++) {
             // Observers
@@ -12,7 +10,7 @@ class Main {
         }
 
         let messageboard: MessageBoard = new MessageBoard()
-        horn.register(messageboard)
+        Horn.getInstance().register(messageboard)
     }
 }
 
