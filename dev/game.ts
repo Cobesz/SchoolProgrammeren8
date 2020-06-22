@@ -1,9 +1,11 @@
 class Game {
-    
+    private static instance: Game;
+
+
     private chicken : Chicken
     
  
-    constructor() {
+    private constructor() {
         this.chicken = new Chicken()
 
  
@@ -16,6 +18,15 @@ class Game {
         
         requestAnimationFrame(() => this.gameLoop())
     }
+
+    public static getInstance(): Game {
+
+        if(!Game.instance) {
+            Game.instance = new Game()
+        }
+
+        return Game.instance
+    }
 } 
 
-window.addEventListener("load", () => new Game())
+window.addEventListener("load", () => Game.getInstance())
