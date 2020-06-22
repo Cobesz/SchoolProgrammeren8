@@ -1,12 +1,10 @@
 class Game {
     private static instance: Game;
-
-
     private chicken : Chicken
     
  
     private constructor() {
-        this.chicken = new Chicken()
+        this.chicken = Chicken.getInstance()
 
  
         this.gameLoop()

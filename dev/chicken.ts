@@ -1,4 +1,6 @@
 class Chicken extends HTMLElement{
+    private static instance: Chicken;
+
     // Fields 
     private x        : number = 0
     private y        : number = 0  
@@ -8,7 +10,7 @@ class Chicken extends HTMLElement{
 
     private speedMultiplier : number = 5
 
-    constructor() {
+    private constructor() {
         super()
 
         let game = document.getElementsByTagName("game")[0]
@@ -49,15 +51,15 @@ class Chicken extends HTMLElement{
         this.direction = (this.xspeed < 0) ? 1 : -1;
     }
 
-    public update() : void {
-        this.x += this.xspeed
-        this.y += this.yspeed
-        
-        this.draw()
-    }
 
-    private draw() : void {
-        this.style.transform = "translate("+this.x+"px, "+this.y+"px) scale("+this.direction+",1)"
+
+    public static getInstance(): Chicken {
+
+        if(!Chicken.instance) {
+            Chicken.instance = new Chicken()
+        }
+
+        return Chicken.instance
     }
 }
 

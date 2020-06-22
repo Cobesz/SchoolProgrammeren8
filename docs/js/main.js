@@ -27,6 +27,40 @@ class Chicken extends HTMLElement {
         this.yspeed *= this.speedMultiplier;
         this.direction = (this.xspeed < 0) ? 1 : -1;
     }
+    static getInstance() {
+        if (!Chicken.instance) {
+            Chicken.instance = new Chicken();
+        }
+        return Chicken.instance;
+    }
+}
+window.customElements.define("chicken-component", Chicken);
+class Game {
+    constructor() {
+        this.chicken = Chicken.getInstance();
+        this.gameLoop();
+    }
+    gameLoop() {
+        this.chicken.update();
+        requestAnimationFrame(() => this.gameLoop());
+    }
+    static getInstance() {
+        if (!Game.instance) {
+            Game.instance = new Game();
+        }
+        return Game.instance;
+    }
+}
+window.addEventListener("load", () => Game.getInstance());
+class GameObject extends HTMLElement {
+    constructor() {
+        super();
+    }
+}
+class Humanoidish extends GameObject {
+    constructor() {
+        super();
+    }
     update() {
         this.x += this.xspeed;
         this.y += this.yspeed;
@@ -36,16 +70,12 @@ class Chicken extends HTMLElement {
         this.style.transform = "translate(" + this.x + "px, " + this.y + "px) scale(" + this.direction + ",1)";
     }
 }
-window.customElements.define("chicken-component", Chicken);
-class Game {
-    constructor() {
-        this.chicken = new Chicken();
-        this.gameLoop();
-    }
-    gameLoop() {
-        this.chicken.update();
-        requestAnimationFrame(() => this.gameLoop());
+class Chilling {
+    moveToTarget(humanoidish) {
     }
 }
-window.addEventListener("load", () => new Game());
+class Hunting {
+    moveToTarget(humanoidish) {
+    }
+}
 //# sourceMappingURL=main.js.map
